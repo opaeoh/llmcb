@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chess LLM Benchmark</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        h1, h2 {
+            text-align: center;
+            color: #2c3e50;
+        }
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: 1px solid #bdc3c7;
+        }
+        #gameData {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        #gifContainer {
+            text-align: center;
+            margin-top: 20px;
+        }
+        #gifContainer img {
+            max-width: 50%;
+            height: auto;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        #viewAllData {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #3498db;
+            text-decoration: none;
+        }
+        #viewAllData:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>Chess LLM Benchmark</h1>
+    <select id="modelSelect">
+        <option value="">Select a model</option>
+        <option value="chatgpt4o">ChatGPT-4o mini</option>
+        <option value="claude35">Claude 3.5 Sonnet</option>
+        <option value="gemini15">Gemini 1.5 Flash</option>
+        <option value="llama31">llama-3.1-70b-versatile</option>
+        <option value="llama32">llama-3.2-90b-text-preview</option>
+        <option value="llama370b">llama3-70b-8192</option>
+        <option value="mistralnemo">Mistral Nemo</option>
+    </select>
+    <div id="gameData"></div>
+    <div id="gifContainer"></div>
+    <button id="viewGameBtn" style="display:none;">View Game</button>
+    <a id="viewAllData" href="#" target="_blank">View All Data</a>
+
+    <script>
+        const gameData = {
+            chatgpt4o: {
+                model: "ChatGPT-4o mini",
+                stockfish: "SF 16 , 7 MB , Depth 28 , NNUE , cloud [final]",
+                datePlayed: "10/16/2024",
+                stockfishColor: "White",
+                modelColor: "Black",
+                result: "Stockfish - Rate of illegal moves exceeded",
+                illegalMoves: 3,
+                accuracyStockfish: "N/A",
+                accuracyModel: "N/A",
+                gameLink: "ww.chess.com/emboard?id=12291679",
+                gifLink: "https://images.chesscomfiles.com/uploads/game-gifs/90px/green/neo/0/cc/0/0/bUMwS2d2NVFmSFdPSHkhVGVnOTBmZVpSa3M4IXB4UTV5azVaaXlZSWxCSUJzQktCdkJaS2JzOThuREtVY3VSSkNL.gif",
+                moves: "1. e4 e5 2. Nf3 Nc6 3. Bb5 a6 4. Ba4 Nf6 5. O-O Be7 6. Re1 d6 7. c3 O-O 8. h3 Nb8 9. Bc2 Nbd7 10. a4 c5 11. d4 cxd4 12. cxd4 exd4 13. Nxd4 Ne5 14. Nc3 Re8 15. f4 Ng6 16. Be3 d5 17. e5",
+                viewAllDataLink: "https://example.com/chatgpt4o-data"
+            },
+            claude35: {
+                model: "Claude 3.5 Sonnet",
+                stockfish: "SF 16 , 7 MB , Depth 30 , NNUE , cloud [final]",
+                datePlayed: "10/16/2024",
+                stockfishColor: "Black",
+                modelColor: "White",
+                result: "Stockfish - Rate of illegal moves exceeded",
+                illegalMoves: 3,
+                accuracyStockfish: "N/A",
+                accuracyModel: "N/A",
+                gameLink: "www.chess.com/emboard?id=12291655",
+                gifLink: "https://images.chesscomfiles.com/uploads/game-gifs/90px/green/neo/0/cc/0/0/bUMwS2d2NVFmSCFUZWdUQ2ZlQ1J2S1FLZUs5MEtlUkhrQUhCbHQ4IWJzWlJjdUJMZGwwRnNDTHVudUZlbGU2U2VuUkpBSUpDdEJYUGFkUElCSTdk.gif",
+                moves: "1. e4 e5 2. Nf3 Nc6 3. Bb5 Nf6 4. O-O Nxe4 5. Re1 Nd6 6. Nxe5 Nxe5 7. Rxe5+ Be7 8. Re1 Nxb5 9. c4 Nd4 10. d3 O-O 11. Nc3 d6 12. Be3 Nf5 13. Qd2 Bh4 14. Ne4 Nxe3 15. fxe3 Bxe1 16. Qxe1 Be6 17. Qf2 d5 18. c5 dxe4 19. d4 b6 20. Rd1 bxc5 21. dxc5 Qxd1+",
+                viewAllDataLink: "https://example.com/claude35-data"
+            },
+            gemini15: {
+                model: "Gemini 1.5 Flash",
+                stockfish: "SF 16 , 7 MB , Depth 32 , NNUE , cloud [final]",
+                datePlayed: "10/16/2024",
+                stockfishColor: "Black",
+                modelColor: "White",
+                result: "Stockfish - Rate of illegal moves exceeded",
+                illegalMoves: 4,
+                accuracyStockfish: "N/A",
+                accuracyModel: "N/A",
+                gameLink: "www.chess.com/emboard?id=12291697",
+                gifLink: "https://images.chesscomfiles.com/uploads/game-gifs/90px/green/neo/0/cc/0/0/bUMwS2d2NVFmSFdPSHkhVGVnOTBmZVpSa3M4IXB4UTV5azVaaXlZSWxCSUJzQktCdkJaS2JzOThuREtVY3VSSkNL.gif",
+                moves: "1. e4 e5 2. Nf3 Nc6 3. Bb5 Nf6 4. O-O Nxe4 5. d3 Nd6",
+                viewAllDataLink: "https://example.com/gemini15-data"
+            },
+            llama31: {
+                model: "llama-3.1-70b-versatile",
+                stockfish: "SF 16 , 7 MB , Depth 28 , NNUE , cloud [final]",
+                datePlayed: "10/15/2024",
+                stockfishColor: "Black",
+                modelColor: "White",
+                result: "Stockfish - [#]",
+                illegalMoves: 2,
+                accuracyStockfish: 97.2,
+                accuracyModel: 70.2,
+                gameLink: "www.chess.com/emboard?id=12288967",
+                gifLink: "https://images.chesscomfiles.com/uploads/game-gifs/90px/green/neo/0/cc/0/0/bUMwS2d2NVFmQTlJdktRS2x0S0F0QVpSZG03Rm93RnhtdUl1bnV4b2hmb3BmbnBnZW02RW10Z25rc25mdGtmZA,,.gif",
+                moves: "1. e4 e5 2. Nf3 Nc6 3. Bc4 Bc5 4. Nxe5 Nxe5 5. d3 Nxc4 6. dxc4 d6 7. Qe2 Qh4 8. g3 Qh3 9. Qe3 Bxe3 10. fxe3 Qg2 11. Rf1 Qxh2 12. Rf2 Qg1+ 13. Ke2 Bg4+ 14. Kd3 Qxf2 15. c3 Qf1+ 16. Kc2 Qd1#",
+                viewAllDataLink: "https://example.com/llama31-data"
+            },
+            llama32: {
+                model: "llama-3.2-90b-text-preview",
+                stockfish: "SF 16 , 7 MB , Depth 28 , NNUE , cloud [final]",
+                datePlayed: "10/15/2024",
+                stockfishColor: "White",
+                modelColor: "Black",
+                result: "Stockfish - [#]",
+                illegalMoves: 0,
+                accuracyStockfish: 96.9,
+                accuracyModel: 73.9,
+                gameLink: "www.chess.com/emboard?id=12288525",
+                gifLink: "https://images.chesscomfiles.com/uploads/game-gifs/90px/green/neo/0/cc/0/0/bEJaSmtBMFNicyFUQUpTSmNNM1ZNVDJUbXU3MHNKWVFKMDgwaXFXR2dtWEhCSkh6cXpHemE0MDg0NThaSlFaUTU2UVBkN1BXN1lXT213.gif",
+                moves: "1. d4 d5 2. c4 e6 3. Nc3 Nf6 4. cxd5 exd5 5. Bg5 h6 6. Bxf6 gxf6 7. e3 Qe7 8. Nxd5 c6 9. Nxe7 Kxe7 10. a3 a5 11. Ne2 b5 12. d5 b4 13. axb4 axb4 14. Rxa8 Ke8 15. Rxb8 Kd7 16. dxc6+ Kxc6 17. Rxc8+ Kb6 18. Qd8+ Ka7 19. Qc7+ Ka6 20. Ng3#",
+                viewAllDataLink: "https://example.com/llama32-data"
+            },
+            llama370b: {
+                model: "llama3-70b-8192",
+                stockfish: "SF 16 , 7 MB , Depth 28 , NNUE , cloud [final]",
+                datePlayed: "10/15/2024",
+                stockfishColor: "White",
+                modelColor: "Black",
+                result: "Stockfish - Rate of illegal moves exceeded",
+                illegalMoves: 3,
+                accuracyStockfish: "N/A",
+                accuracyModel: "N/A",
+                gameLink: "www.chess.com/emboard?id=12288997",
+                gifLink: "https://images.chesscomfiles.com/uploads/game-gifs/90px/green/neo/0/cc/0/0/bEJaSmtBMFNicyFUQUpTSmNNOTBtdTNWTUYyTUZ3VE5kTjBSd1I1UVJ3NzBzSg,,.gif",
+                moves: "1. d4 d5 2. c4 e6 3. Nc3 Nf6 4. cxd5 exd5 5. Bg5 Be7 6. e3 h6 7. Bh4 g5 8. Bg3 Nh5 9. Qxh5 Bd6 10. Bxd6 Nc6 11. Bg3 Qe7 12. Nxd5",
+                viewAllDataLink: "https://example.com/llama370b-data"
+            },
+            mistralnemo: {
+    model: "Mistral Nemo",
+    stockfish: "SF 16 , 7 MB , Depth 25 , NNUE , cloud [final]",
+    datePlayed: "10/16/2024",
+    stockfishColor: "White",
+    modelColor: "Black",
+    result: "Stockfish - Rate of illegal moves exceeded",
+    illegalMoves: 3,
+    accuracyStockfish: "N/A",
+    accuracyModel: "N/A",
+    gameLink: "www.chess.com/emboard?id=12291735",
+    gifLink: "https://images.chesscomfiles.com/uploads/game-gifs/90px/green/neo/0/cc/0/0/bEJaSmtBWVFic0pBbXUhVGZBMFNndjkwZWc4IWRrMFJ1QzVaQ0taS0JLUkt2Sw,,.gif",
+    moves: "1. d4 d5 2. c4 c6 3. Nc3 dxc4 4. e3 Nf6 5. Bxc4 e6 6. Nf3 Be7 7. O-O O-O 8. Qc2 Bd6 9. e4 Nbd7 10. e5 Nxe5 11. dxe5 Bxe5 12. Nxe5",
+    viewAllDataLink: "https://example.com/mistralnemo-data"
+}
+        };
+
+        const modelSelect = document.getElementById('modelSelect');
+        const gameDataDiv = document.getElementById('gameData');
+        const gifContainer = document.getElementById('gifContainer');
+        const viewGameBtn = document.getElementById('viewGameBtn');
+        const viewAllDataLink = document.getElementById('viewAllData');
+
+        const topModel = "llama32"; // Set the top model here
+
+        modelSelect.addEventListener('change', updateGameData);
+        viewGameBtn.addEventListener('click', viewGame);
+
+        function updateGameData() {
+            const selectedModel = modelSelect.value || topModel;
+            if (selectedModel) {
+                const data = gameData[selectedModel];
+                gameDataDiv.innerHTML = `
+                    <h2>${data.model}</h2>
+                    <p><strong>Stockfish:</strong> ${data.stockfish}</p>
+                    <p><strong>Date played:</strong> ${data.datePlayed}</p>
+                    <p><strong>Stockfish color:</strong> ${data.stockfishColor}</p>
+                    <p><strong>Model color:</strong> ${data.modelColor}</p>
+                    <p><strong>Result:</strong> ${data.result}</p>
+                    <p><strong>Illegal moves:</strong> ${data.illegalMoves}</p>
+                    <p><strong>Accuracy [Stockfish]:</strong> ${data.accuracyStockfish}</p>
+                    <p><strong>Accuracy [${data.model}]:</strong> ${data.accuracyModel}</p>
+                    <p><strong>Moves:</strong> ${data.moves}</p>
+                `;
+                gifContainer.innerHTML = `<img src="${data.gifLink}" alt="${data.model} game gif">`;
+                viewGameBtn.style.display = 'block';
+                viewAllDataLink.href = data.viewAllDataLink;
+            } else {
+                gameDataDiv.innerHTML = '';
+                gifContainer.innerHTML = '';
+                viewGameBtn.style.display = 'none';
+                viewAllDataLink.href = '#';
+            }
+        }
+
+        function viewGame() {
+            const selectedModel = modelSelect.value || topModel;
+            if (selectedModel) {
+                const gameLink = gameData[selectedModel].gameLink;
+                window.open(gameLink, '_blank');
+            }
+        }
+
+        // Initialize with top model data
+        updateGameData();
+    </script>
+</body>
+</html>
